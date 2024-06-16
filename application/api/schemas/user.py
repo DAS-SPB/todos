@@ -15,7 +15,7 @@ class UserCreate(BaseModel):
             "examples": [
                 {
                     "username": "John Doe",
-                    "password": "apple007"
+                    "password": "apple007.,<>~!@#$%^&*()_+"
                 }
             ]
         }
