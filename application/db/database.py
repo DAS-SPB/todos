@@ -21,3 +21,12 @@ async def insert_user_to_db(data: dict, collection=collection_users):
         raise HTTPException(status_code=400, detail="This username is taken")
 
     return await insert_to_db(data=data, collection=collection_users)
+
+
+async def find_one_in_db(data: dict, collection: AsyncIOMotorCollection):
+    try:
+        fetched_data = await collection.find_one(data)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch data from MongoDB: {str(e)}")
+
+    return fetched_data
