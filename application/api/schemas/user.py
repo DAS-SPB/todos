@@ -8,7 +8,7 @@ class UserCreate(BaseModel):
     username: str = Field(description="Username should be a string", min_length=5, max_length=250,
                           pattern=USERNAME_PATTERN)
     password: str = Field(description="Password should be a string", min_length=5, max_length=250,
-                          pattern=USERNAME_PATTERN)
+                          pattern=PASSWORD_PATTERN)
 
     model_config = {
         "json_schema_extra": {
