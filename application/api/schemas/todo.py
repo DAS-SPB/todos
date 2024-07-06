@@ -1,9 +1,8 @@
 from pydantic import BaseModel, Field
-
 from typing import Optional
 
-TITLE_PATTERN = r'\w'
-DESCRIPTION_PATTERN = r'\w'
+TITLE_PATTERN = r'\w+'
+DESCRIPTION_PATTERN = r'\w+'
 
 
 class TodoCreate(BaseModel):
@@ -31,7 +30,7 @@ class TodoUpdate(BaseModel):
                                  pattern=TITLE_PATTERN)
     description: Optional[str] = Field(description="Description should be a string", min_length=5, max_length=250,
                                        pattern=DESCRIPTION_PATTERN)
-    completed: bool
+    completed: Optional[bool]
 
     model_config = {
         "json_schema_extra": {

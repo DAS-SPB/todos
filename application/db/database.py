@@ -36,7 +36,8 @@ async def find_one_in_db(data: dict, collection: AsyncIOMotorCollection):
 
 async def find_many_in_db(data: dict, collection: AsyncIOMotorCollection, skip: int = 0, limit: int = 10):
     try:
-        fetched_data = await collection.find(data).skip(skip).limit(limit)
+        cursor = collection.find(data).skip(skip).limit(limit)
+        fetched_data = await cursor.to_list(length=limit)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Failed to fetch data from MongoDB: {str(e)}")
@@ -47,15 +48,17 @@ async def find_many_in_db(data: dict, collection: AsyncIOMotorCollection, skip: 
 async def update_todo_in_db(data: dict, username: str, collection=collection_todos) -> UpdateResult:
     query = {
         "username": username,
-        "id": data.get("id")
+        "_id": data.get("id")
     }
     try:
-        updated_data = await collection.update_one(filter=query, update={"$set": data})
+        await collection.update_one(filter=query, update={"$set": data})
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Failed to update data in MongoDB: {str(e)}")
 
-    return updated_data
+    updated_record = await find_one_in_db(data=query, collection=collection)
+
+    return updated_record
 
 
 async def delete_todo_in_db(todo_id: str, username: str, collection=collection_todos) -> DeleteResult:

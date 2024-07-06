@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
 USERNAME_PATTERN = r"^[\p{L}\p{N}\.'-]+(?: [\p{L}\p{N}\.'-]+)*$"
-PASSWORD_PATTERN = r"^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\.,<>~!@#$%^&*()_+])[a-zA-Z0-9\.,<>~!@#$%^&*()_+]+$"
+PASSWORD_PATTERN = r"^[\w\.,<>~!@#$%^&*()_+-]+$"
 
 
 class UserCreate(BaseModel):

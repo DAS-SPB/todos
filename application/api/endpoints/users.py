@@ -19,7 +19,7 @@ async def register_user(user: UserCreate):
     }
     created_user = await insert_user_to_db(data=user_dict)
 
-    return created_user
+    return {"id": str(created_user.inserted_id), "username": user.username}
 
 
 @router.post("/login/", status_code=status.HTTP_200_OK)
@@ -27,7 +27,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     query = {"username": form_data.username}
     user = await find_one_in_db(data=query, collection=collection_users)
 
-    if not user or not verify_password(form_data.password, user.password):
+    if not user or not verify_password(form_data.password, user.get('password')):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials",
                             headers={"WWW-Authenticate": "Bearer"})
     jwt_token = create_access_token({"sub": form_data.username})
@@ -42,4 +42,4 @@ async def read_user(username: str = Depends(get_user_by_valid_token)):
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-    return user
+    return {"id": str(user.get("_id")), "username": user.get("username")}
