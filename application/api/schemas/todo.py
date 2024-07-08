@@ -47,7 +47,7 @@ class TodoUpdate(BaseModel):
 
 
 class TodoDelete(BaseModel):
-    id: str
+    message: str
 
 
 class TodoResponse(BaseModel):

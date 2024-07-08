@@ -36,10 +36,10 @@ async def read_todos(skip: int = 0, limit: int = 10, username: str = Depends(get
 
     return [
         TodoResponse(
-            id=str(todo["_id"]),
-            title=todo["title"],
-            description=todo["description"],
-            completed=todo["completed"]
+            id=str(todo.get("_id")),
+            title=todo.get("title"),
+            description=todo.get("description"),
+            completed=todo.get("completed")
         )
         for todo in fetched_todos
     ]
@@ -57,10 +57,10 @@ async def read_todo(todo_id: str, username: str = Depends(get_user_by_valid_toke
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Todo not found")
 
     return TodoResponse(
-        id=str(fetched_todo["_id"]),
-        title=fetched_todo["title"],
-        description=fetched_todo["description"],
-        completed=fetched_todo["completed"]
+        id=str(fetched_todo.get("_id")),
+        title=fetched_todo.get("title"),
+        description=fetched_todo.get("description"),
+        completed=fetched_todo.get("completed")
     )
 
 
@@ -69,15 +69,15 @@ async def update_todo(todo_update: TodoUpdate, username: str = Depends(get_user_
     updated_data = await update_todo_in_db(data=todo_update.dict(), username=username, collection=collection_todos)
 
     return TodoResponse(
-        id=str(updated_data["_id"]),
-        title=updated_data["title"],
-        description=updated_data["description"],
-        completed=updated_data["completed"]
+        id=str(updated_data.get("_id")),
+        title=updated_data.get("title"),
+        description=updated_data.get("description"),
+        completed=updated_data.get("completed")
     )
 
 
 @router.delete("/todos/{todo_id}", response_model=TodoDelete, status_code=status.HTTP_200_OK)
 async def delete_todo(todo_id: str, username: str = Depends(get_user_by_valid_token)):
-    deleted_todo = delete_todo_in_db(todo_id=todo_id, username=username)
+    await delete_todo_in_db(todo_id=todo_id, username=username)
 
-    return deleted_todo
+    return TodoDelete(message=f"Todo with id '{todo_id}' deleted")

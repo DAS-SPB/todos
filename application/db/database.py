@@ -1,6 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorCollection
 from pymongo.results import InsertOneResult, UpdateResult, DeleteResult
 from fastapi import HTTPException, status
+from bson import ObjectId
 
 from ..db.connection import collection_users, collection_todos
 
@@ -45,13 +46,14 @@ async def find_many_in_db(data: dict, collection: AsyncIOMotorCollection, skip: 
     return fetched_data
 
 
-async def update_todo_in_db(data: dict, username: str, collection=collection_todos) -> UpdateResult:
+async def update_todo_in_db(data: dict, username: str, collection=collection_todos):
+    data_copy = data.copy()
     query = {
         "username": username,
-        "_id": data.get("id")
+        "_id": ObjectId(data_copy.pop("id"))
     }
     try:
-        await collection.update_one(filter=query, update={"$set": data})
+        await collection.update_one(filter=query, update={"$set": data_copy})
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Failed to update data in MongoDB: {str(e)}")
@@ -64,7 +66,7 @@ async def update_todo_in_db(data: dict, username: str, collection=collection_tod
 async def delete_todo_in_db(todo_id: str, username: str, collection=collection_todos) -> DeleteResult:
     query = {
         "username": username,
-        "id": todo_id
+        "_id": ObjectId(todo_id)
     }
     try:
         deleted_data = await collection.delete_one(filter=query)
@@ -72,4 +74,4 @@ async def delete_todo_in_db(todo_id: str, username: str, collection=collection_t
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Failed to delete data in MongoDB: {str(e)}")
 
-    return deleted_data.raw_result
+    return deleted_data

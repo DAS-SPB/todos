@@ -19,7 +19,10 @@ async def register_user(user: UserCreate):
     }
     created_user = await insert_user_to_db(data=user_dict)
 
-    return {"id": str(created_user.inserted_id), "username": user.username}
+    return UserResponse(
+        id=str(created_user.inserted_id),
+        username=user.username
+    )
 
 
 @router.post("/login/", status_code=status.HTTP_200_OK)
@@ -42,4 +45,7 @@ async def read_user(username: str = Depends(get_user_by_valid_token)):
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-    return {"id": str(user.get("_id")), "username": user.get("username")}
+    return UserResponse(
+        id=str(user.get("_id")),
+        username=user.get("username")
+    )

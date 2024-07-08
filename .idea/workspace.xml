@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7056e323-1b30-4b05-ae8c-72dc5fcc686d" name="Changes" comment="30.06">
+    <list default="true" id="7056e323-1b30-4b05-ae8c-72dc5fcc686d" name="Changes" comment="06.07">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/api/endpoints/todos.py" beforeDir="false" afterPath="$PROJECT_DIR$/application/api/endpoints/todos.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/api/endpoints/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/application/api/endpoints/users.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/api/schemas/todo.py" beforeDir="false" afterPath="$PROJECT_DIR$/application/api/schemas/todo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/api/schemas/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/application/api/schemas/user.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/db/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/application/db/database.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -150,7 +149,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719774887195</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="06.07">
+      <option name="closed" value="true" />
+      <created>1720285959863</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1720285959863</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -186,6 +193,7 @@
     <MESSAGE value="17.06" />
     <MESSAGE value="22.06" />
     <MESSAGE value="30.06" />
-    <option name="LAST_COMMIT_MESSAGE" value="30.06" />
+    <MESSAGE value="06.07" />
+    <option name="LAST_COMMIT_MESSAGE" value="06.07" />
   </component>
 </project>
