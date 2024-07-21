@@ -1,4 +1,5 @@
 import pytest
+import logging
 
 from application.api.schemas.todo import TodoCreate
 from application.api.schemas.user import UserCreate
@@ -8,20 +9,22 @@ from bson.objectid import ObjectId
 
 from application.core.config import settings
 
-uri = settings.DATABASE_URL
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
+uri = settings.DATABASE_URL
 client = MongoClient(uri)
 
 test_db = client['test_todo_app']
-test_collection_users = test_db['test_users']
-test_collection_todos = test_db['test_todos']
+collection_users = test_db['test_collection_users']
+collection_todos = test_db['test_collection_todos']
 
 
 @pytest.fixture(scope='function', autouse=True)
 def clean_db():
-    print("Cleaning up collections before test run...")
-    test_db.test_collection_todos.delete_many({})
-    test_db.test_collection_users.delete_many({})
+    logger.info("Cleaning up collections before test run...")
+    collection_todos.delete_many({})
+    collection_users.delete_many({})
     yield
 
 
@@ -50,24 +53,24 @@ def test_create_todo_only_mandatory_fields():
 
 def test_create_user_db():
     user_data = {"username": "testuser", "password": "testpassword"}
-    result = test_db.test_collection_users.insert_one(user_data)
+    result = collection_users.insert_one(user_data)
     inserted_id = result.inserted_id
     assert inserted_id is not None
-    print(f"Created user id: {inserted_id}")
+    logger.info(f"Created user id: {inserted_id}")
 
-    test_db_user = test_db.test_collection_users.find_one({"_id": ObjectId(inserted_id)})
+    test_db_user = collection_users.find_one({"_id": ObjectId(inserted_id)})
     assert test_db_user['username'] == "testuser"
     assert test_db_user['password'] == "testpassword"
 
 
 def test_create_todo_db():
     todo_data = {"title": "Test todo", "description": "Test todo creation", "completed": True}
-    result = test_db.test_collection_todos.insert_one(todo_data)
+    result = collection_todos.insert_one(todo_data)
     inserted_id = result.inserted_id
     assert inserted_id is not None
-    print(f"Created todo id: {inserted_id}")
+    logger.info(f"Created todo id: {inserted_id}")
 
-    test_db_todo = test_db.test_collection_todos.find_one({"_id": ObjectId(inserted_id)})
+    test_db_todo = collection_todos.find_one({"_id": ObjectId(inserted_id)})
     assert test_db_todo['title'] == "Test todo"
     assert test_db_todo['description'] == "Test todo creation"
     assert test_db_todo['completed'] is True
