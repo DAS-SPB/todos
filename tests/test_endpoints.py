@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 api_client = TestClient(application)
 prefix = "/api/v1"
 jwt_token = None
-random_uuid = uuid.uuid4()
+random_uuid = None
 todo_id = None
 
 
@@ -46,12 +46,15 @@ def test_read_root():
 def test_create_user():
     global random_uuid
 
+    random_uuid = uuid.uuid4()
     json = {"username": f"{random_uuid}username", "password": "testpassword"}
     response = api_client.post(f"{prefix}/register/", json=json)
     assert response.status_code == 201
     assert "id" in response.json()
     assert "username" in response.json()
     assert response.json().get("username") == f"{random_uuid}username"
+
+    logger.info(f"uuid: {random_uuid}")
 
 
 def test_login():
@@ -61,15 +64,20 @@ def test_login():
     headers = {'accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}
     data = {"username": f"{random_uuid}username", "password": "testpassword"}
     response = api_client.post(f"{prefix}/login/", data=data, headers=headers)
-    jwt_token = response.json().get("access_token")
+
+    logger.info(f"uuid: {random_uuid}")
+
     assert response.status_code == 200
     assert "access_token" in response.json()
     assert response.json().get("token_type") == "bearer"
+    jwt_token = response.json().get("access_token")
 
 
 def test_create_todo():
-    response = api_client.post(f"{prefix}/todo/", json={"title": "New todo", "description": "test description"},
-                               headers=auth_header())
+    global todo_id
+
+    json = {"title": "New todo", "description": "test description"}
+    response = api_client.post(f"{prefix}/todo/", json=json, headers=auth_header())
     assert response.status_code == 200
     todo = response.json()
     assert "id" in todo
@@ -108,9 +116,8 @@ def test_read_invalid_todo():
 def test_update_todo():
     global todo_id
 
-    response = api_client.put(f"{prefix}/todos/update",
-                              json={"id": todo_id, "title": "updated title", "description": "updated description",
-                                    "completed": True}, headers=auth_header())
+    json = {"id": todo_id, "title": "updated title", "description": "updated description", "completed": True}
+    response = api_client.put(f"{prefix}/todos/update", json=json, headers=auth_header())
     assert response.status_code == 200
     todo = response.json()
     assert todo["id"] == todo_id
