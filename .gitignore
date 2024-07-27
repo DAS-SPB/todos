@@ -2,7 +2,11 @@ venv/
 .venv/
 env/
 
-.idea/*
+.idea/workspace.xml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/*.iml
 
 __pycache__/
 *.pyc
