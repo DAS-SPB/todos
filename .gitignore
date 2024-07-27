@@ -3,12 +3,6 @@ venv/
 env/
 
 .idea/
-.idea/workspace.xml
-.idea/inspectionProfiles/
-.idea/misc.xml
-.idea/modules.xml
-.idea/*.iml
-.idea/vcs.xml
 
 __pycache__/
 *.pyc
