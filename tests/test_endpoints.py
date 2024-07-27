@@ -10,11 +10,14 @@ from application.core.config import settings
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# uri = settings.DATABASE_URL
-# mongo_client = MongoClient(uri)
-# test_db = mongo_client['test_todo_app']
-# collection_users = test_db['test_collection_users']
-# collection_todos = test_db['test_collection_todos']
+# actually, separate env should be created to make this work in a right way
+# smt like this:
+# test_uri = settings.TEST_DATABASE_URL
+uri = settings.DATABASE_URL
+mongo_client = MongoClient(uri)
+test_db = mongo_client['test_todo_app']
+collection_users = test_db['test_collection_users']
+collection_todos = test_db['test_collection_todos']
 
 api_client = TestClient(application)
 prefix = "/api/v1"
@@ -23,12 +26,12 @@ random_uuid = None
 todo_id = None
 
 
-# @pytest.fixture(scope='function', autouse=True)
-# def setup_teardown_db():
-#     logger.info("Cleaning up collections before test run...")
-#     collection_todos.delete_many({})
-#     collection_users.delete_many({})
-#     yield
+@pytest.fixture(scope='function', autouse=True)
+def setup_teardown_db():
+    logger.info("Cleaning up collections before test run...")
+    collection_todos.delete_many({})
+    collection_users.delete_many({})
+    yield
 
 
 def auth_header():

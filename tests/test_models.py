@@ -12,6 +12,9 @@ from application.core.config import settings
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# actually, separate env should be created to make this work in a right way
+# smt like this:
+# test_uri = settings.TEST_DATABASE_URL
 uri = settings.DATABASE_URL
 client = MongoClient(uri)
 
